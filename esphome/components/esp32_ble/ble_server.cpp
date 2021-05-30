@@ -38,6 +38,11 @@ void BLEServer::setup() {
 
   this->setup_server_();
 
+  if (this->use_controller_) {
+    this->controller_ = new BLEController(this);
+    this->controller_->setup();
+  }
+
   for (auto *component : this->service_components_) {
     component->setup_service();
   }

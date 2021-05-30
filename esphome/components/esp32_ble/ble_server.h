@@ -3,10 +3,11 @@
 #include "esphome/core/component.h"
 #include "esphome/core/helpers.h"
 #include "esphome/core/preferences.h"
-#include "ble_service.h"
-#include "ble_characteristic.h"
-#include "ble_uuid.h"
 #include "ble_advertising.h"
+#include "ble_characteristic.h"
+#include "ble_controller.h"
+#include "ble_service.h"
+#include "ble_uuid.h"
 #include <map>
 
 #include "queue.h"
@@ -36,6 +37,7 @@ class BLEServer : public Component {
 
   void set_manufacturer(const std::string manufacturer) { this->manufacturer_ = manufacturer; }
   void set_model(const std::string model) { this->model_ = model; }
+  void set_use_controller(bool use_controller) { this->use_controller_ = use_controller; }
 
   BLEService *create_service(const uint8_t *uuid, bool advertise = false);
   BLEService *create_service(uint16_t uuid, bool advertise = false);
@@ -64,6 +66,9 @@ class BLEServer : public Component {
   optional<std::string> model_;
   esp_gatt_if_t gatts_if_{0};
   BLEAdvertising *advertising_;
+
+  bool use_controller_{false};
+  BLEController *controller_{nullptr};
 
   uint32_t connected_clients_{0};
   std::map<uint16_t, void *> clients_;
