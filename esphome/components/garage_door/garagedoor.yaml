@@ -1,0 +1,47 @@
+esphome:
+  name: garagedoor
+  comment: "Garage Door"
+  platform: ESP32
+  board: esp32doit-devkit-v1
+
+external_components:
+  - source: github://esev/esphome@garage_door
+    components: [ garage_door ]
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_psk
+
+debug:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+# Enable ota updates
+ota:
+
+uart:
+  id: garage_door_uart_bus
+  rx_pin: GPIO16
+  tx_pin: GPIO17
+  baud_rate: 1200
+  parity: EVEN
+
+garage_door:
+  uart_id: garage_door_uart_bus
+
+switch:
+  - platform: garage_door
+    door:
+      name: "Garage Door"
+    light:
+      name: "Garage Opener Light"
+    lock:
+      name: "Garage Door Lock"
+
+binary_sensor:
+  - platform: garage_door
+    name: "Garage Door Eye Sensor"
