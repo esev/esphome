@@ -7,16 +7,18 @@ namespace esev {
 namespace garage_door {
 
 namespace {
-using ::esphome::optional;
-using ::esphome::nullopt;
 using ::esphome::binary_sensor::BinarySensor;
 using ::esphome::esp_log_printf_;
+using ::esphome::millis;
+using ::esphome::nullopt;
+using ::esphome::optional;
 
 static const char* TAG = "garage_door";
 
 void UpdateIfChanged(const optional<bool>& opt, GarageDoorSwitch* val) {
   if (opt.value_or(val->state) != val->state) {
     val->publish_state(*opt);
+    val->update_icon();
   }
 }
 
@@ -76,10 +78,9 @@ void GarageDoorSwitch::write_state(bool state) {
    // publish_state(state);  // It'll get a state update after the next poll.
 }
 
-std::string GarageDoorSwitch::icon() {
-  return state ? icon_true_ : icon_false_;
+void GarageDoorSwitch::update_icon() {
+  this->set_icon(state ? icon_true_ : icon_false_);
 }
-
 
 GarageDoor::GarageDoor()
   : door(new GarageDoorSwitch("mdi:garage-open", "mdi:garage", [this]{

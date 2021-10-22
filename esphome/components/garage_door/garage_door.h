@@ -17,7 +17,7 @@ class GarageDoorSwitch : public esphome::switch_::Switch {
     std::string icon_true, std::string icon_false, Callback&& callback);
 
   void write_state(bool state) override;
-  std::string icon() override;
+  void update_icon();
 
  private:
   const Callback callback_;
